@@ -1,5 +1,26 @@
   // class activity 17 / day 1 / activity 10
   // Store our API endpoint inside queryUrl
+
+function getColor(magnitude){
+     if (magnitude <=1){
+       return '#FF0000'
+     }
+     if (magnitude <=2){
+      return '#800000'
+    }
+    if (magnitude <=4){
+      return '#FFFF00'
+    }
+
+    if (magnitude <=7){
+      return '#808000'
+    }
+
+}
+
+
+
+
 let queryUrl = ("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson")
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -17,10 +38,24 @@ function onEachFeature(feature, layer) {
 }
 console.log(earthquakeData);
 
+function pointToLayer(feature, latlng){
+    var circle = L.circleMarker(latlng, {
+      fillOpacity: 1,
+      radius: feature.properties.mag * 3,
+      color: getColor(feature.properties.mag)
+
+    });
+  return circle
+
+}
+
+
+
 // Create a GeoJSON layer containing the features array on the earthquakeData object
 // Run the onEachFeature function once for each piece of data in the array
 let earthquakes = L.geoJSON(earthquakeData, {
-  onEachFeature: onEachFeature
+  onEachFeature: onEachFeature,
+  pointToLayer: pointToLayer
 });
 
 // Sending our earthquakes layer to the createMap function
@@ -72,4 +107,37 @@ let myMap = L.map("map", {
 L.control.layers(baseMaps, overlayMaps, {
   collapsed: false
 }).addTo(myMap);
+
+var legend = L.control({position: 'bottomright'});
+legend.onAdd = function(myMap){
+
+
+  var div = L.DomUtil.create("div", 'info Legend'),
+
+  magnitude = [0, 2, 4, 7],
+  color = [
+    "#FF0000",
+    "#800000",
+    "#FFFF00",
+    "#808000"
+
+  ];
+
+
+  for (var i = 0; i<magnitude.length; i++){
+    div.innerHTML +=
+    '<i style="background:' + color[i] + '"></i> ' +
+    magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
+    
+  }
+    return div;
+
+
+  };
+legend.addTo(myMap);
+
+
 }
+
+
+
