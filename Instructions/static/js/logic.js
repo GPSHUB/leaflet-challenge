@@ -1,22 +1,22 @@
   // class activity 17 / day 1 / activity 10
   // Store our API endpoint inside queryUrl
-function getColor(magnitude){
-    if (magnitude <=1){
+function getColor(depth){
+    if (depth <=10){
       return 'lime'
     }
-    if (magnitude <=2){
+    if (depth <=30){
       return 'green'
     }
-    if (magnitude <=3){
+    if (depth <=50){
       return 'crocodile'
     }
-    if (magnitude <=4){
+    if (depth <=70){
       return 'darkgreen'
     }
-    if (magnitude <=5){
+    if (depth <=90){
       return 'yellow'
     }
-    if (magnitude > 5){
+    if (depth > 90){
       return 'red'
     }
 }
@@ -43,7 +43,7 @@ console.log(earthquakeData);
 function pointToLayer(feature, latlng){
     let circle = L.circleMarker(latlng, {
       fillOpacity: 1,
-      radius: feature.properties.mag * 2,
+      radius: feature.properties.mag * 3,
       color: getColor(feature.geometry.coordinates[2])
 
     });
@@ -121,13 +121,13 @@ legend.onAdd = function(map){
 
   let div = L.DomUtil.create("div", 'info legend'),
 
-  magnitude = [0, 10, 30, 50, 70, 90],
+  depth = [0, 10, 30, 50, 70, 90],
   color = ['lime', 'green', 'crocodile', 'darkgreen', 'yellow', 'red'];
   
-  for (let i = 0; i<magnitude.length; i++){
+  for (let i = 0; i<depth.length; i++){
     div.innerHTML +=
     '<i style="background:' + color[i] + '"></i> ' +
-    magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');    
+    depth[i] + (depth[i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');    
   }
     return div;
 
