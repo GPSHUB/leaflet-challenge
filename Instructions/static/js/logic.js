@@ -1,25 +1,25 @@
   // class activity 17 / day 1 / activity 10
   // Store our API endpoint inside queryUrl
-
 function getColor(magnitude){
-     if (magnitude <=1){
-       return '#FF0000'
-     }
-     if (magnitude <=2){
-      return '#800000'
+    if (magnitude <=1){
+      return 'lime'
+    }
+    if (magnitude <=2){
+      return 'green'
+    }
+    if (magnitude <=3){
+      return 'crocodile'
     }
     if (magnitude <=4){
-      return '#FFFF00'
+      return 'darkgreen'
     }
-
-    if (magnitude <=7){
-      return '#808000'
+    if (magnitude <=5){
+      return 'yellow'
     }
-
+    if (magnitude > 5){
+      return 'red'
+    }
 }
-
-
-
 
 let queryUrl = ("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson")
 // Perform a GET request to the query URL
@@ -34,22 +34,21 @@ function createFeatures(earthquakeData) { //earthquakeData delivers 2104 returns
 // Give each feature a popup describing the place and time of the earthquake
 function onEachFeature(feature, layer) {
   layer.bindPopup("<h3>" + feature.properties.place +
-    "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
+    "</h3><hr><p>" + new Date(feature.properties.time) +
+    "</h3><hr><p>" + "Magnitude: " + feature.properties.mag +
+    "</h3><hr><p>" + "Depth: " + feature.geometry.coordinates[2]+ "</p>");
 }
 console.log(earthquakeData);
 
 function pointToLayer(feature, latlng){
-    var circle = L.circleMarker(latlng, {
+    let circle = L.circleMarker(latlng, {
       fillOpacity: 1,
-      radius: feature.properties.mag * 3,
-      color: getColor(feature.properties.mag)
+      radius: feature.properties.mag * 2,
+      color: getColor(feature.geometry.coordinates[2])
 
     });
   return circle
-
 }
-
-
 
 // Create a GeoJSON layer containing the features array on the earthquakeData object
 // Run the onEachFeature function once for each piece of data in the array
@@ -81,10 +80,19 @@ let darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z
   accessToken: API_KEY
 });
 
+let satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  maxZoom: 18,
+  id: 'mapbox.satellite',
+  accessToken: API_KEY
+});
+
+
 // Define a baseMaps object to hold our base layers
 let baseMaps = {
   "Street Map": streetmap,
-  "Dark Map": darkmap
+  "Dark Map": darkmap,
+  "Satellite": satellite
 };
 
 // Create overlay object to hold our overlay layer
@@ -108,35 +116,23 @@ L.control.layers(baseMaps, overlayMaps, {
   collapsed: false
 }).addTo(myMap);
 
-var legend = L.control({position: 'bottomright'});
-legend.onAdd = function(myMap){
+let legend = L.control({position: 'bottomright'});
+legend.onAdd = function(map){
 
+  let div = L.DomUtil.create("div", 'info legend'),
 
-  var div = L.DomUtil.create("div", 'info Legend'),
-
-  magnitude = [0, 2, 4, 7],
-  color = [
-    "#FF0000",
-    "#800000",
-    "#FFFF00",
-    "#808000"
-
-  ];
-
-
-  for (var i = 0; i<magnitude.length; i++){
+  magnitude = [0, 10, 30, 50, 70, 90],
+  color = ['lime', 'green', 'crocodile', 'darkgreen', 'yellow', 'red'];
+  
+  for (let i = 0; i<magnitude.length; i++){
     div.innerHTML +=
     '<i style="background:' + color[i] + '"></i> ' +
-    magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');
-    
+    magnitude[i] + (magnitude[i + 1] ? '&ndash;' + magnitude[i + 1] + '<br>' : '+');    
   }
     return div;
 
-
   };
 legend.addTo(myMap);
-
-
 }
 
 
