@@ -1,5 +1,5 @@
-  // class activity 17 / day 1 / activity 10
-  // Store our API endpoint inside queryUrl
+  // Starting with class activity 17 / day 1 / activity 10
+
 function getColor(depth){
     if (depth <=10){
       return 'lime'
@@ -20,7 +20,7 @@ function getColor(depth){
       return 'red'
     }
 }
-
+  // Store our API endpoint inside queryUrl
 let queryUrl = ("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson")
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -28,7 +28,7 @@ d3.json(queryUrl, function(data) {
 createFeatures(data.features);
 });
 
-function createFeatures(earthquakeData) { //earthquakeData delivers 2104 returns 
+function createFeatures(earthquakeData) { //earthquakeData delivers returns 
 
 // Define a function we want to run once for each feature in the features array
 // Give each feature a popup describing the place and time of the earthquake
@@ -73,6 +73,13 @@ let streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
   accessToken: API_KEY
 });
 
+let lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "light-v10",
+    accessToken: API_KEY
+});
+  
 let darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
@@ -91,6 +98,7 @@ let satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.pn
 // Define a baseMaps object to hold our base layers
 let baseMaps = {
   "Street Map": streetmap,
+  "Light Map": lightmap,
   "Dark Map": darkmap,
   "Satellite": satellite
 };
