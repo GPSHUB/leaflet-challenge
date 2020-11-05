@@ -127,11 +127,11 @@ L.control.layers(baseMaps, overlayMaps, {
 let legend = L.control({position: 'bottomright'});
 legend.onAdd = function(map){
 
-  let div = L.DomUtil.create("div", 'info legend'),
+let div = L.DomUtil.create("div", 'info legend'),
 
   depth = [0, 10, 30, 50, 70, 90],
   color = ['lime', 'green', 'crocodile', 'darkgreen', 'yellow', 'red'];
-  
+
   for (let i = 0; i<depth.length; i++){
     div.innerHTML +=
     '<i style="background:' + color[i] + '"></i> ' +
