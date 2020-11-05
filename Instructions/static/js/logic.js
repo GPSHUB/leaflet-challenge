@@ -1,23 +1,23 @@
   // Starting with class activity 17 / day 1 / activity 10
-
+// Took screenshot of legend colors and located color codes using: https://www.ginifab.com/feeds/pms/color_picker_from_image.php
 function getColor(depth){
     if (depth <=10){
-      return 'lime'
+      return '#a3f600'
     }
     if (depth <=30){
-      return 'green'
+      return '#dcf400'
     }
     if (depth <=50){
-      return 'crocodile'
+      return '#f7da08'
     }
     if (depth <=70){
-      return 'darkgreen'
+      return '#fdb72a'
     }
     if (depth <=90){
-      return 'yellow'
+      return '#fca35d'
     }
     if (depth > 90){
-      return 'red'
+      return '#ff5f65'
     }
 }
   // Store our API endpoint inside queryUrl
@@ -44,8 +44,10 @@ function pointToLayer(feature, latlng){
     let circle = L.circleMarker(latlng, {
       fillOpacity: 1,
       radius: feature.properties.mag * 3,
-      color: getColor(feature.geometry.coordinates[2])
-
+      fillColor: getColor(feature.geometry.coordinates[2]),
+      color: 'darkgreen',
+      weight: .5
+// Added circle outline and weight so colors stood out
     });
   return circle
 }
@@ -97,8 +99,8 @@ let satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.pn
 
 // Define a baseMaps object to hold our base layers
 let baseMaps = {
-  "Street Map": streetmap,
   "Light Map": lightmap,
+  "Street Map": streetmap,
   "Dark Map": darkmap,
   "Satellite": satellite
 };
@@ -106,6 +108,7 @@ let baseMaps = {
 // Create overlay object to hold our overlay layer
 let overlayMaps = {
   Earthquakes: earthquakes
+  
 };
 
 // Create our map, giving it the streetmap and earthquakes layers to display on load
@@ -114,7 +117,7 @@ let myMap = L.map("map", {
     37.09, -95.71
   ],
   zoom: 5,
-  layers: [streetmap, earthquakes]
+  layers: [lightmap, earthquakes]
 });
 
 // Create a layer control
@@ -130,16 +133,20 @@ legend.onAdd = function(map){
 let div = L.DomUtil.create("div", 'info legend'),
 
   depth = [0, 10, 30, 50, 70, 90],
-  color = ['lime', 'green', 'crocodile', 'darkgreen', 'yellow', 'red'];
+  color = ['#a3f600', '#dcf400', '#f7da08', '#fdb72a', '#fca35d', '#ff5f65'],
+  labels = ['<strong> EARTHQUAKE DEPTH </strong>'],
+  from, to;
 
   for (let i = 0; i<depth.length; i++){
     div.innerHTML +=
     '<i style="background:' + color[i] + '"></i> ' +
     depth[i] + (depth[i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');    
   }
-    return div;
+  // div.innerHTML = labels.join('<br>'); HOW DO I ADD THE LEGEND TITLE
+  return div;
 
   };
+  
 legend.addTo(myMap);
 }
 
